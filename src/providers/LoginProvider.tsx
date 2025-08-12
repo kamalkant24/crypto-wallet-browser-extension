@@ -60,7 +60,7 @@ export const LoginContextProvider = ({ children }: Props) => {
   const [planMnemonic, setPlainMnemonic] = useState<string | null>(null);
 
   // useEffect(() => {
-  //   const token = localStorage.getItem("token");
+  //   const token = Cookies.get("token");
   //   if (token) {
   //     isAuthenticated(token).then((valid) => {
   //       if (valid) {
@@ -73,9 +73,9 @@ export const LoginContextProvider = ({ children }: Props) => {
   // });
 
   useEffect(() => {
-    const pass = localStorage.getItem("password");
+    const pass = Cookies.get("password");
     console.log("localPass", pass);
-    const mne = localStorage.getItem("mnemonic");
+    const mne = Cookies.get("mnemonic");
     console.log("mne", mne);
     if (pass !== undefined && mne !== undefined) {
       setLocalMnemonics(mne);
@@ -85,7 +85,7 @@ export const LoginContextProvider = ({ children }: Props) => {
   }, [localPassword, chainId, network, wallet, balance]);
 
   const isPasswordPresent = () => {
-    return localStorage.getItem("password") !== undefined; // Use Cookies.get instead of localStorage.getItem
+    return Cookies.get("password") !== undefined; // Use Cookies.get instead of localStorage.getItem
   };
 
   useEffect(() => {
@@ -169,7 +169,7 @@ export const LoginContextProvider = ({ children }: Props) => {
 
       if (mnemonic !== null && localPassword !== null && isPasswordValid) {
         // const newJwt = await createToken(enteredPassword);
-        // localStorage.setItem("token", newJwt);
+        // Cookies.set("token", newJwt, { expires: 7});
         const decryptedMnemonic = decryptMnemonic(mnemonic, enteredPassword);
         console.log("decryptMnemonic", decryptedMnemonic);
         setPlainMnemonic(decryptedMnemonic.toString());
@@ -196,10 +196,10 @@ export const LoginContextProvider = ({ children }: Props) => {
   ): Promise<boolean> => {
     try {
       const hashPass = hashedPassword(password.toString());
-      localStorage.setItem("password", hashPass);
+      Cookies.set("password", hashPass,{ expires: 7});
 
       await encryptMnemonic(mnemonics, password).then((val) => {
-        localStorage.setItem("mnemonic", val.toString());
+        Cookies.set("mnemonic", val.toString(), { expires: 7});
       });
 
       const isWalletCreated = await createWallet(mnemonics);
@@ -280,7 +280,7 @@ export const LoginContextProvider = ({ children }: Props) => {
       if (!response) {
         return false;
       }
-      const user = localStorage.getItem("token");
+      const user = Cookies.get("token");
       if (!user) {
         return false;
       }

@@ -98,7 +98,8 @@ function HomePage() {
   const net = networks_const.find((network) => network.chainId === chainId);
   if (!net) throw new Error("Unsupported network for tx history: " + chainId);
 
-  const apiKey = process.env[net.apiKeyEnvVar] || "";
+  const apiKey =
+    (process.env as any)[net.apiKeyEnvVar] || process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY;
 
   const q = new URLSearchParams({
     module: "account",

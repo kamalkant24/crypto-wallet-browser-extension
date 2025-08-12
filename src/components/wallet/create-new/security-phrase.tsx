@@ -2,7 +2,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ethers } from "ethers";
+import { ethers,Mnemonic } from "ethers";
 import CopyToClipboard from "react-copy-to-clipboard";
 
 interface SecretRecoveryPhaseProps {
@@ -27,8 +27,8 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
 
   const generateMnemonic = async () => {
     try {
-      const entropy = ethers.utils.randomBytes(16);
-      const mnemonic = ethers.utils.entropyToMnemonic(entropy);
+      const entropy = ethers.randomBytes(16);
+      const mnemonic = Mnemonic.fromEntropy(entropy).phrase;
       setMnemonics(mnemonic);
       setSecretPhrase(mnemonic.toString());
     } catch (error) {

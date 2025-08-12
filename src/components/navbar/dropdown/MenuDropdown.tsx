@@ -47,7 +47,7 @@ const MenuContent = () => {
     <div className="flex flex-col w-full  gap-1">
       <button className="flex justify-start my-2 items-start  flex-grow gap-2 p-2 border border-gray-600 w-full">
         <KeyIcon className="h-8 w-8" />
-        <h2 className="text-lg font-medium">View Private Key</h2>
+        <h2 className="text-lg font-medium">Transactions</h2>
       </button>
       <button className="flex justify-start my-2 items-start  flex-grow gap-2 p-2 border border-gray-600 w-full">
         <CurrencyDollarIcon className="h-8 w-8" />

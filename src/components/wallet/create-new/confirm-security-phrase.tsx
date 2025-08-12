@@ -1,15 +1,15 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import { ChangeEvent, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useHistory from React Router
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as bip39 from "bip39";
 import { ethers } from "ethers";
-import next from "next";
+
 interface ConfirmSecurityPhaseProps {
   secretPhrase: string;
-  setIsSubmit:(submit:boolean)=>void
+  setIsSubmit: (submit: boolean) => void;
 }
 
 export const ConfirmSecretRecoveryPhase: React.FC<ConfirmSecurityPhaseProps> = ({
@@ -29,22 +29,14 @@ export const ConfirmSecretRecoveryPhase: React.FC<ConfirmSecurityPhaseProps> = (
     Array(totalInputs).fill(false)
   );
 
-  const handlePaste = (
-    e: React.ClipboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>, index: number) => {
     e.preventDefault();
     const pastedText = e.clipboardData.getData("text");
-
-    // Split the pasted text into words
     const words = pastedText.split(" ");
-
-    // Update the input values with the words
     const newInputValues = [...inputValues];
     words.slice(0, totalInputs).forEach((word, i) => {
       newInputValues[i] = word;
     });
-
     setInputValues(newInputValues);
   };
 
@@ -54,42 +46,55 @@ export const ConfirmSecretRecoveryPhase: React.FC<ConfirmSecurityPhaseProps> = (
     setShowPasswords(newShowPasswords);
   };
 
-  const isAllField = () => {
-    return inputValues.every((value) => value.trim() !== "");
+  const isAllField = () => inputValues.every((value) => value.trim() !== "");
+const normalizePhrase = (phrase: string) =>
+  phrase
+    .trim()
+    .toLowerCase()
+    .split(/\s+/) // split by one or more spaces
+    .filter(Boolean);
+  const handleNext = async () => {
+    if (!isAllField()) {
+    toast.error("Please fill all the fields");
+    return;
+  }
+
+  const inputNormalized = normalizePhrase(inputValues.join(" "));
+  const secretNormalized = normalizePhrase(secretPhrase);
+
+  if (inputNormalized.length !== secretNormalized.length) {
+    toast.error("Incorrect phrase length");
+    return;
+  }
+
+  // Check each word matches exactly in order
+  for (let i = 0; i < secretNormalized.length; i++) {
+    if (inputNormalized[i] !== secretNormalized[i]) {
+      toast.error("Wrong confirm");
+      return;
+    }
+  }
+    setIsSubmit(true);
   };
 
-  
-
-  const handleNext = async () => {
-    
-      if (!isAllField()) {
-        toast.error("please fill all the fields");
-        return;
-      }
-
-     if (inputValues.join(" ").toString() !== secretPhrase.toString()) {
-        toast.error("wrong confirm ")
-     }
-    setIsSubmit(true);
-    } 
-  
-
   const handleClear = () => {
-    const clearedValues = Array(inputValues.length).fill("");
-    setInputValues(clearedValues);
+    setInputValues(Array(inputValues.length).fill(""));
   };
 
   return (
     <div className="flex flex-col justify-center items-center">
       <ToastContainer />
-      <h1 className="text-3xl font-bold p-4 text-center">
+      <h1 className="text-3xl font-bold p-4 text-center text-primary">
         Enter The Secret Recovery Phrase
       </h1>
 
       <div className="grid grid-cols-3 gap-4 md:gap-8 m-2">
         {inputValues.map((value, index) => (
-          <div key={index} className="flex items-center justify-center space-x-2">
-            <span className="text-gray-200">{index + 1}.</span>
+          <div
+            key={index}
+            className="flex items-center justify-center space-x-2"
+          >
+            <span className="text-secondary">{index + 1}.</span>
             <input
               type={showPasswords[index] ? "text" : "password"}
               value={value}
@@ -99,33 +104,31 @@ export const ConfirmSecretRecoveryPhase: React.FC<ConfirmSecurityPhaseProps> = (
                 setInputValues(newInputValues);
               }}
               onPaste={(e) => handlePaste(e, index)}
-              className="border border-gray-300 p-2 rounded-lg w-full md:w-1/2 px-2"
+              className="border border-secondary p-2 rounded-lg w-full md:w-1/2 px-2 bg-white text-primary placeholder-secondary"
+              placeholder="Enter word"
             />
-            <button
-              onClick={() => togglePasswordVisibility(index)}
-              className=" "
-            >
+            <button onClick={() => togglePasswordVisibility(index)} className="">
               {showPasswords[index] ? (
-                <EyeIcon className="h-4 w-4" />
+                <EyeIcon className="h-4 w-4 text-accent" />
               ) : (
-                <EyeSlashIcon className="h-4 w-4" />
+                <EyeSlashIcon className="h-4 w-4 text-accent" />
               )}
             </button>
           </div>
         ))}
       </div>
 
-      <div className=" flex m-4 gap-12 ">
+      <div className="flex m-4 gap-12">
         <button
-          onClick={() => handleClear()}
-          className="text-blue-500 border border-blue-500  focus:outline-none focus:ring-4 focus:ring-blue-300   font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 "
+          onClick={handleClear}
+          className="text-secondary border border-secondary focus:outline-none focus:ring-4 focus:ring-secondary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 hover:bg-secondary/10"
         >
-          clear
+          Clear
         </button>
         <button
           type="button"
           onClick={handleNext}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white bg-accent border-secondary hover:bg-accent/90 focus:outline-none focus:ring-4 focus:ring-accent/50 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
         >
           Next
         </button>

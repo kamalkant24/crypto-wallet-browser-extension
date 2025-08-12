@@ -1,12 +1,12 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import { ChangeEvent, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useHistory from React Router
+import { useNavigate } from "react-router-dom"; 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as bip39 from "bip39";
-import { EtherSymbol, ethers } from "ethers";
-import next from "next";
+import { ethers } from "ethers";
+
 interface SecretRecoveryPhaseProps {
   setSecretPhrase: (phrase: string) => void;
   onNext: () => void;
@@ -16,8 +16,8 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
   setSecretPhrase,
   onNext,
 }) => {
-  const numberOfRows = 4; // Number of rows
-  const inputsPerRow = 3; // Number of inputs per row
+  const numberOfRows = 4;
+  const inputsPerRow = 3;
   const totalInputs = numberOfRows * inputsPerRow;
 
   const navigate = useNavigate();
@@ -35,11 +35,8 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
   ) => {
     e.preventDefault();
     const pastedText = e.clipboardData.getData("text");
-
-    // Split the pasted text into words
     const words = pastedText.split(" ");
 
-    // Update the input values with the words
     const newInputValues = [...inputValues];
     words.slice(0, totalInputs).forEach((word, i) => {
       newInputValues[i] = word;
@@ -54,9 +51,7 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
     setShowPasswords(newShowPasswords);
   };
 
-  const isAllField = () => {
-    return inputValues.every((value) => value.trim() !== "");
-  };
+  const isAllField = () => inputValues.every((value) => value.trim() !== "");
 
   const handleNext = async () => {
     try {
@@ -64,36 +59,35 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
         toast.error("please fill all the fields");
         return;
       }
-      let isWalletExits = await ethers.Mnemonic.isValidMnemonic(
+      let isWalletExists = await ethers.Mnemonic.isValidMnemonic(
         inputValues.join(" ")
       );
-      if (!isWalletExits) {
+      if (!isWalletExists) {
         toast.error("invalid mnemonic");
         return;
       }
-      setSecretPhrase(inputValues.join(" ").toString());
+      setSecretPhrase(inputValues.join(" ").trim().toString());
       onNext();
-    } catch (error) {
+    } catch {
       toast.error("something went wrong");
     }
   };
 
   const handleClear = () => {
-    const clearedValues = Array(inputValues.length).fill("");
-    setInputValues(clearedValues);
+    setInputValues(Array(inputValues.length).fill(""));
   };
 
   return (
     <div className="flex flex-col justify-center items-center md:gap-4">
       <ToastContainer />
-      <h1 className="text-3xl font-bold p-4 text-center">
+      <h1 className="text-3xl font-bold p-4 text-center text-secondary">
         Enter The Secret Recovery Phrase
       </h1>
 
       <div className="grid grid-cols-3 gap-4 md:gap-8 m-2">
         {inputValues.map((value, index) => (
           <div key={index} className="flex items-center justify-center space-x-2">
-            <span className="text-gray-200">{index + 1}.</span>
+            <span className="text-secondary">{index + 1}.</span>
             <input
               type={showPasswords[index] ? "text" : "password"}
               value={value}
@@ -103,36 +97,31 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
                 setInputValues(newInputValues);
               }}
               onPaste={(e) => handlePaste(e, index)}
-              className="border border-gray-300 p-2 rounded-lg w-1/2 px-2"
+              className="border border-secondary p-2 rounded-lg w-1/2 px-2 text-primary
+                focus:outline-none focus:ring-4 focus:ring-accent focus:border-accent"
             />
-            <button
-              onClick={() => togglePasswordVisibility(index)}
-              className=" "
-            >
+            <button onClick={() => togglePasswordVisibility(index)}>
               {showPasswords[index] ? (
-                <EyeIcon className="h-4 w-4" />
+                <EyeIcon className="h-4 w-4 text-accent" />
               ) : (
-                <EyeSlashIcon className="h-4 w-4" />
+                <EyeSlashIcon className="h-4 w-4 text-accent" />
               )}
             </button>
           </div>
         ))}
       </div>
 
-      <div className=" flex m-4 gap-12 ">
+      <div className="flex m-4 gap-12">
         <button
-          onClick={() => handleClear()}
-          className="text-blue-500 border border-blue-500  focus:outline-none focus:ring-4 focus:ring-blue-300   font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 "
+          onClick={handleClear}
+          className="text-white border border-secondary focus:outline-none focus:ring-4 focus:ring-accent font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2"
         >
-          clear
+          Clear
         </button>
         <button
           type="button"
-          // onClick={onConfirm as () => void} // Cast to correct event type
-          // Pass event argument if needed
-          // onClick={() => navigate("/new-password")}
-          onClick={() => handleNext()}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          onClick={handleNext}
+          className="text-white bg-secondary border-secondary hover:bg-accent focus:outline-none focus:ring-4 focus:ring-accent font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
         >
           Next
         </button>

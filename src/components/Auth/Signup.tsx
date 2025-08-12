@@ -6,11 +6,10 @@ function Signup() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex bg-[#0d0d0d] flex-col justify-center items-center gap-4 h-screen  md:h-[768px] md:w-[768px] md:rounded-lg">
+    <div className="flex bg-primary flex-col justify-center items-center gap-4 h-screen md:h-[768px] md:w-[768px] md:rounded-lg">
       <Logo />
       <div className="">
-        <h1 className="text-3xl md:text-5xl text-blue-400 my-2 px-4 whitespace-nowrap">
-          {" "}
+        <h1 className="text-3xl md:text-5xl text-secondary my-2 px-4 whitespace-nowrap">
           Welcome to Crypto Wallet
         </h1>
         <div className="flex flex-col justify-center items-center m-4 gap-4">
@@ -21,7 +20,7 @@ function Signup() {
             Import Existing Wallet
           </button>
           <button
-            className="group  relative flex select-none items-center gap-3 overflow-hidden rounded-lg bg-gradient-to-tr bg-blue-400  py-3.5 px-7 pr-[72px] text-center align-middle font-sans text-md font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            className="group relative flex select-none items-center gap-3 overflow-hidden rounded-lg bg-accent py-3.5 px-7 pr-[72px] text-center align-middle font-sans text-md font-bold uppercase text-white shadow-md shadow-yellow-500/20 transition-all hover:shadow-lg hover:shadow-yellow-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             onClick={() => navigate("/create-new")}
           >
             Create New Wallet

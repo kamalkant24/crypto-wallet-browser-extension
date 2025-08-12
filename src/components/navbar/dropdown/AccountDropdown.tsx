@@ -1,24 +1,16 @@
 // AccountDropdown.tsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DropDownLayout from "./DropDownLayout";
 import {
-  CurrencyRupeeIcon,
-  ChevronDownIcon,
-  GlobeAltIcon,
-  LockClosedIcon,
   EllipsisVerticalIcon,
-  ArrowUpRightIcon,
-  ArrowsRightLeftIcon,
   UserCircleIcon,
-  CurrencyDollarIcon,
 } from "@heroicons/react/20/solid";
 import { useLogin } from "@/providers/LoginProvider";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 interface AccountProps {
   onClose: () => void;
 }
-
 
 const AccountContent = () => {
   const [addNewAccount, setNewAccount] = useState(false);
@@ -26,78 +18,30 @@ const AccountContent = () => {
 
   const { account, addAccount, wallet, switchAccount } = useLogin();
 
-  
-
-  useEffect(() => {}, [wallet]);
-
-  useEffect(() => {}, [addNewAccount]);
-  // if (addNewAccount) {
-  //     return (
-  //       <div className="flex flex-col w-full  gap-1">
-  //        <h1>hello world</h1>
-  //       </div>
-  //     );
-  //   }
-  // return (
-  //       <div className="flex flex-col w-full  gap-1">
-  //   <div className="overflow-y-auto flex  flex-col  gap-2">
-  //     <button className="flex justify-start items-start  flex-grow gap-2 p-2 border border-gray-600 w-full">
-  //       <CurrencyDollarIcon className="h-8 w-8" />
-  //       <div className="flex flex-col">
-  //         <h2 className="text-lg font-medium">Account 1</h2>
-  //         <h2 className="text-xs ">
-  //           {account?.slice(0, 7)}....{account?.slice(-4)}
-  //         </h2>
-  //       </div>
-  //     </button>
-  //     {/* <button className="flex justify-start flex-grow items-start gap-2 p-2 border border-gray-600 w-full">
-  //     <CurrencyDollarIcon className="h-8 w-8" />
-  //     <div className="flex flex-col">
-  //       <h2 className="text-lg font-medium">Account 1</h2>
-  //       <h2 className="text-lg ">0xerererer</h2>
-  //     </div>
-  //   </button> */}
-  //   </div>
-  //   <button
-  // onClick={()=>setNewAccount(true)}
-  //     className="flex justify-center items-center text-blue-500 "
-  //   >
-  //     Add New Account
-  //   </button>
-  //       </div>
-  //     );
-  // }
-
   const handleAddAccount = async () => {
-    
-    if (accountName === null || accountName === "") {
+    if (!accountName) {
       toast.error("account name cannot be empty");
       return;
-
     }
 
-    if (accountName !== null || accountName !== "") {
-      const isAccountAdded = await addAccount(accountName!);
-      if (isAccountAdded) {
-        toast.success("account added ");
-        return;
-      }
+    const isAccountAdded = await addAccount(accountName);
+    if (isAccountAdded) {
+      toast.success("account added");
     }
   };
 
   const handleSwitchAccount = async (privateKey: string) => {
-    if (privateKey !== null || privateKey !== undefined || privateKey === "") {
-      const isSwitchAccount = await switchAccount(privateKey);
-
-      if (isSwitchAccount) {
-        toast.success("account switched")
-        return
-      }
+    if (!privateKey) {
       toast.error("unable to switch account");
-      return
+      return;
     }
-    toast.error("unable to switch account");
-    return
+
+    const isSwitchAccount = await switchAccount(privateKey);
+    if (isSwitchAccount) {
+      toast.success("account switched");
+    } else {
+      toast.error("unable to switch account");
+    }
   };
 
   return (
@@ -105,10 +49,10 @@ const AccountContent = () => {
       <div>
         {addNewAccount ? (
           <div className="flex flex-col w-full gap-1">
-            <div className="overflow-y-auto flex my-2  flex-col justify-center items-center  gap-2">
+            <div className="overflow-y-auto flex my-2 flex-col justify-center items-center gap-2">
               <input
                 placeholder="account name"
-                className="bg-gray-600 rounded-md border-none outline-none w-2/3 py-2 px-4  text-white"
+                className="bg-secondary rounded-md border-none outline-none w-2/3 py-2 px-4 text-white"
                 type="text"
                 onChange={(e) => setAccountName(e.target.value)}
               />
@@ -117,18 +61,14 @@ const AccountContent = () => {
               <button
                 type="button"
                 onClick={() => setNewAccount(!addNewAccount)}
-                className="flex justify-center items-center 
-                text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700
-                "
+                className="flex justify-center items-center text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-4 focus:ring-secondary font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
               >
-                cancel
+                Cancel
               </button>
               <button
                 type="button"
                 onClick={() => handleAddAccount()}
-                className="flex justify-center items-center
-                text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800
-                "
+                className="flex justify-center items-center text-white bg-accent hover:bg-secondary focus:ring-4 focus:ring-accent font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
               >
                 Add
               </button>
@@ -136,21 +76,22 @@ const AccountContent = () => {
           </div>
         ) : (
           <div className="flex flex-col w-full gap-1">
-            <div className="overflow-y-auto flex py-4 px-2  max-h-40 flex-col  gap-2">
+            <div className="overflow-y-auto flex py-4 px-2 max-h-40 flex-col gap-2">
               {wallet?.map((accountData, index) => (
                 <button
-                  key={index} // Assuming each account has a unique key
-                  className="flex justify-start items-center flex-grow gap-2 p-2 border border-gray-600 w-full"
+                  key={index}
+                  className="flex justify-start items-center flex-grow gap-2 p-2 border border-secondary w-full"
                   onClick={() =>
                     handleSwitchAccount(
                       accountData[Object.keys(accountData)[0]].privateKey
                     )
                   }
                 >
-                  {/* <CurrencyDollarIcon className="h-8 w-8" /> */}
                   <div className="flex flex-col justify-start items-start">
-                    <h2 className="text-lg font-medium">Account {index + 1}</h2>
-                    <h2 className="text-md ">
+                    <h2 className="text-lg font-medium">
+                      Account {index + 1}
+                    </h2>
+                    <h2 className="text-md">
                       {accountData[Object.keys(accountData)[0]].address?.slice(
                         0,
                         7
@@ -161,23 +102,20 @@ const AccountContent = () => {
                       )}
                     </h2>
                   </div>
-                  <EllipsisVerticalIcon className="h-8 w-8 ml-auto" />
+                  <EllipsisVerticalIcon className="h-8 w-8 ml-auto text-secondary" />
                 </button>
               ))}
             </div>
             <button
               type="button"
               onClick={() => setNewAccount(!addNewAccount)}
-              className="flex justify-center items-center text-blue-500 "
+              className="flex justify-center items-center text-accent"
             >
               Add New Account
             </button>
           </div>
         )}
       </div>
-      {/* <span>
-        <button onClick={() => setNewAccount(!addNewAccount)}>click me</button>
-      </span> */}
     </div>
   );
 };
@@ -188,7 +126,7 @@ const AccountDropdown: React.FC<AccountProps> = ({ onClose }) => {
       title="Select Account"
       content={<AccountContent />}
       onClose={onClose}
-      icon={<UserCircleIcon className="h-6 w-6" />}
+      icon={<UserCircleIcon className="h-6 w-6 text-primary" />}
     />
   );
 };

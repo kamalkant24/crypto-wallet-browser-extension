@@ -49,12 +49,9 @@ export default function QrDropZone({ setRecipient }: { setRecipient: (address: s
         setDragging(true);
       }}
       onDragLeave={() => setDragging(false)}
-      style={{
-        border: "2px dashed #aaa",
-        padding: "20px",
-        textAlign: "center",
-        background: dragging ? "#f0f0f0" : "transparent",
-      }}
+      className={`border-2 border-dashed border-secondary p-5 text-center ${
+        dragging ? "bg-secondary" : "bg-transparent"
+      } text-accent`}
     >
       Drag & drop a QR image here to auto-fill the recipient address
     </div>

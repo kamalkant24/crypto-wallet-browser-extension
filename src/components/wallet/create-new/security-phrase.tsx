@@ -1,12 +1,12 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ethers,Mnemonic } from "ethers";
+import { ethers, Mnemonic } from "ethers";
 import CopyToClipboard from "react-copy-to-clipboard";
 
 interface SecretRecoveryPhaseProps {
-  setSecretPhrase:(phrase:string)=> void;
+  setSecretPhrase: (phrase: string) => void;
   onNext: () => void;
 }
 
@@ -29,8 +29,9 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
     try {
       const entropy = ethers.randomBytes(16);
       const mnemonic = Mnemonic.fromEntropy(entropy).phrase;
+      console.log("Generated phrase:", mnemonic);
       setMnemonics(mnemonic);
-      setSecretPhrase(mnemonic.toString());
+      setSecretPhrase(mnemonic);
     } catch (error) {
       return { error };
     }
@@ -43,10 +44,10 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
   return (
     <div className="flex flex-col justify-center items-center overflow-y-hidden">
       <ToastContainer />
-      <h1 className="text-3xl font-bold flex items-center justify-center text-center">
+      <h1 className="text-3xl font-bold flex items-center justify-center text-center text-primary">
         Secret Recovery Phrase
       </h1>
-      <p className="text-lg font-light px-4 py-2 flex items-center justify-center text-center">
+      <p className="text-lg font-light px-4 py-2 flex items-center justify-center text-center text-secondary">
         Write down this 12-word Secret Recovery Phrase and save it in a place
         that you trust and only you can access.
       </p>
@@ -58,16 +59,16 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
           rows={2}
           value={mnemonics}
           readOnly
-          className="m-2  outline-1 border border-gray-700 rounded-md p-4 flex "
+          className="m-2 outline-1 border border-secondary rounded-md p-4 flex bg-white text-primary"
         ></textarea>
       ) : (
-        <div className="m-2 outline-1 border border-gray-700 rounded-md p-6 blur">
+        <div className="m-2 outline-1 border border-secondary rounded-md p-6 blur text-secondary">
           Seed phrase will be revealed when you click `reveal the seed phrase.`
         </div>
       )}
       <div className="flex flex-row justify-end gap-16 m-2">
         <button
-          className="flex flex-row gap-2 justify-center items-center"
+          className="flex flex-row gap-2 justify-center items-center text-secondary hover:text-accent disabled:text-gray-400"
           onClick={handleRevealSeedPhrase}
           disabled={seedPhraseVisible}
         >
@@ -76,7 +77,7 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
           ) : (
             <EyeIcon className="h-4 w-4" />
           )}
-          <h1 className="text-blue-500 text-xs">
+          <h1 className="text-xs">
             {seedPhraseVisible ? "Hide seed phrase" : "Reveal the seed phrase"}
           </h1>
         </button>
@@ -88,13 +89,11 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
           }}
         >
           <button
-            className="flex flex-row gap-2 justify-center items-center"
+            className="flex flex-row gap-2 justify-center items-center text-secondary hover:text-accent disabled:text-gray-400"
             disabled={!mnemonics}
           >
             <EyeIcon className="h-4 w-4" />
-            <h1 className="text-blue-500 text-xs">
-              {seedPhraseCopied ? "Copied!" : "Copy to clipboard"}
-            </h1>
+            <h1 className="text-xs">{seedPhraseCopied ? "Copied!" : "Copy to clipboard"}</h1>
           </button>
         </CopyToClipboard>
       </div>
@@ -102,7 +101,7 @@ export const SecretRecoveryPhase: React.FC<SecretRecoveryPhaseProps> = ({
         <button
           type="button"
           onClick={onNext}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-whitebg-secondary border-secondary hover:bg-accent/90 focus:outline-none focus:ring-4 focus:ring-accent/50 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
         >
           Next
         </button>

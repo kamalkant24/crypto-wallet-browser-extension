@@ -8,6 +8,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: '#1A1B2F',   // Deep midnight blue
+        secondary: '#6E4B9E', // Arcane purple
+        accent: '#F1C40F',    // Shimmering gold
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
@@ -15,6 +20,6 @@ const config: Config = {
       },
     },
   },
- 
 }
+
 export default config

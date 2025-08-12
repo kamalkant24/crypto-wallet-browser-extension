@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 import { SecretRecoveryPhase } from "./secret-recovery-phrase";
-
 import { Password } from "./password";
-// import { mnemonicToSeed } from "ethers/lib/utils";
 import Stages from "./stages";
 import { useLogin } from "@/providers/LoginProvider";
 import { RotatingLines } from "react-loader-spinner";
@@ -41,42 +38,10 @@ export default function ImportExisting() {
         setIsLoading(false);
       }
     } catch (error) {
-      //console.error("An error occurred:", error);
       setIsLoading(false);
       toast.error("An error occurred. Please try again.");
     }
   };
-
-  // const handleSubmit = async () => {
-  //   try {
-  //     if (password === null) {
-  //       toast.error("Something is wrong");
-  //       return;
-  //     }
-
-  //     setIsLoading(true);
-
-  //     const isAuth = await signup(secretPhrase, password);
-
-  //     if (isAuth) {
-  //       // Wait for isLoggedIn to become true before navigating
-  //       const checkLoggedInInterval = setInterval(() => {
-  //         if (isLoggedIn) {
-  //           clearInterval(checkLoggedInInterval); // Stop checking
-  //           setIsLoading(false);
-  //           navigate("/home");
-  //         }
-  //       }, 100); // Check every 100 milliseconds
-  //     } else {
-  //       toast.error("Something went wrong in the validation");
-  //       setIsLoading(false);
-  //     }
-  //   } catch (error) {
-  //     //console.error("An error occurred:", error);
-  //     setIsLoading(false);
-  //     toast.error("An error occurred. Please try again.");
-  //   }
-  // };
 
   useEffect(() => {
     if (isSubmit) {
@@ -108,11 +73,11 @@ export default function ImportExisting() {
   };
 
   return (
-    <div className="bg-[#0d0d0d] h-screen  flex flex-col justify-center items-center md:h-[768px] md:w-[768px] md:rounded-lg">
+    <div className="bg-primary h-screen flex flex-col justify-center items-center md:h-[768px] md:w-[768px] md:rounded-lg">
       <ToastContainer />
       {isLoading ? (
         <RotatingLines
-          strokeColor="white"
+          strokeColor="#F1C40F"  // accent color as spinner stroke
           strokeWidth="5"
           animationDuration="0.75"
           width="96"

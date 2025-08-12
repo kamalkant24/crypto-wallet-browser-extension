@@ -18,15 +18,13 @@ export default function ImportExisting() {
   const [password, setPassword] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
 
-  const { isSignup,signup, isLoggedIn, localPassword } = useLogin();
+  const { isSignup, signup, isLoggedIn, localPassword } = useLogin();
 
-
-  useEffect(() => {}, [isLoggedIn, isSignup,isLoading]);
+  useEffect(() => {}, [isLoggedIn, isSignup, isLoading]);
 
   const handleNextStep = () => {
     setStep(step + 1);
   };
-
 
   const handleSubmit = async () => {
     try {
@@ -43,7 +41,6 @@ export default function ImportExisting() {
         setIsLoading(false);
       }
     } catch (error) {
-      //console.error("An error occurred:", error);
       setIsLoading(false);
       toast.error("An error occurred. Please try again.");
     }
@@ -85,10 +82,10 @@ export default function ImportExisting() {
   };
 
   return (
-    <div className="bg-[#0d0d0d] h-screen  md:flex md:flex-col md:justify-center  md:h-[768px] md:w-[768px] md:rounded-lg">
+    <div className="bg-primary h-screen md:flex md:flex-col md:justify-center md:h-[768px] md:w-[768px] md:rounded-lg">
       {isLoading ? (
         <RotatingLines
-          strokeColor="white"
+          strokeColor="#F1C40F" // accent color hex from tailwind config
           strokeWidth="5"
           animationDuration="0.75"
           width="96"

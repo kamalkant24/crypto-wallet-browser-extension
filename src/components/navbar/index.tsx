@@ -1,37 +1,21 @@
 import React, { useEffect, useState } from "react";
 import {
-  CurrencyRupeeIcon,
   ChevronDownIcon,
-  GlobeAltIcon,
-  LockClosedIcon,
   EllipsisVerticalIcon,
-  UserCircleIcon,
 } from "@heroicons/react/20/solid";
 import NetworkDropdown from "./dropdown/NetworkDropdown";
 import AccountDropdown from "./dropdown/AccountDropdown";
 import MenuDropdown from "./dropdown/MenuDropdown";
-import DropdownButton from "./dropdown/DropdownButton"; // Import the DropdownButton component
+import DropdownButton from "./dropdown/DropdownButton";
 import { Ethereum } from "@/svg-icons/Ethereum";
 import { Polygon } from "@/svg-icons/Polygon";
 import { useLogin } from "@/providers/LoginProvider";
 import networks_const from "@/utils/networks";
-
-interface ModalInfo {
-  title: string;
-  content: string;
-  showModal: boolean;
-}
+import SendTransaction from "../Home/SendTransactions";
 
 function Navbar() {
-  const [selectedOption, setSelectedOption] = useState<string>("tokens");
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const { chainId } = useLogin();
-
-  useEffect(() => {}, [chainId]);
-
-  const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-  };
 
   const openModal = (modalName: string) => {
     setActiveModal(modalName);
@@ -59,7 +43,7 @@ function Navbar() {
   const icons: Record<string, React.ReactNode> = {
     network: (
       <div className="flex justify-center items-center gap-x-4">
-        <span className="hidden md:flex text-white">
+        <span className="hidden md:flex text-primary">
           {
             networks_const.find((network) => network.chainId === chainId)
               ?.network
@@ -72,26 +56,26 @@ function Navbar() {
             <Polygon />
           )}
         </div>
-        <ChevronDownIcon className="h-8 w-8  " />
+        <ChevronDownIcon className="h-8 w-8 text-primary" />
       </div>
     ),
     accounts: (
       <>
-        <span className="text-white  ">Accounts</span>
-        <ChevronDownIcon className="h-8 w-8  " />
+        <span className="text-primary">Accounts</span>
+        <ChevronDownIcon className="h-8 w-8 text-primary" />
       </>
     ),
     menu: (
       <>
-        <EllipsisVerticalIcon className="h-8 w-8" />
+        <EllipsisVerticalIcon className="h-8 w-8 text-primary" />
       </>
     ),
   };
 
   return (
     <div>
-      <div className="bg-[#0d0d0d]   flex justify-between items-center px-4 relative py-3 ">
-        <div className="flex w-full justify-between gap-1 ">
+      <div className="bg-secondary flex justify-between items-center px-4 relative py-3">
+        <div className="flex w-full justify-between gap-1">
           {Object.keys(icons).map((key) => (
             <DropdownButton
               key={key}
@@ -101,7 +85,7 @@ function Navbar() {
           ))}
         </div>
       </div>
-      <div className="flex justify-center ">{renderModal()}</div>
+      <div className="flex justify-center">{renderModal()}</div>
     </div>
   );
 }
